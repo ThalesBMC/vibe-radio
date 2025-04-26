@@ -346,7 +346,7 @@ export const fetchTags = async (limit = 100) => {
 
 export const loadStationsFromLocalFile = async (limit = 1000) => {
   try {
-    const stations = await import("@/data/data.json")
+    const stations = await import("@/data/radio_stations.json")
       .then((module) => module.default || module)
       .catch((error) => {
         console.error("Failed to import local stations file:", error);
