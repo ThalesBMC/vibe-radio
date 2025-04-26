@@ -65,11 +65,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon/favicon.ico",
     other: [
       {
-        rel: "apple-touch-icon",
-        url: "/favicon/apple-icon.png",
-        sizes: "180x180",
-      },
-      {
         rel: "mask-icon",
         url: "/favicon/favicon.svg",
         color: "#ffffff",

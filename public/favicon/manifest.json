@@ -28,7 +28,7 @@
       "src": "/favicon/apple-icon.png",
       "sizes": "180x180",
       "type": "image/png",
-      "purpose": "any apple"
+      "purpose": "any"
     }
   ],
   "theme_color": "#ffffff",
