@@ -186,7 +186,7 @@ export const fetchGlobalStations = async (limit = 1000) => {
       oceaniaStations,
       otherStations,
     ] = await Promise.all([
-      fetchByRegion(regions.northAmerica, 60),
+      fetchByRegion(regions.northAmerica, 100),
       fetchByRegion(regions.southAmerica, 80),
       fetchByRegion(regions.europe, 50),
       fetchByRegion(regions.africa, 80),
@@ -249,13 +249,13 @@ export const fetchStations = async (params: StationQueryParams = {}) => {
 
     // If we specifically want global distribution, use our custom function
     if (params.hasGeoInfo) {
-      return fetchGlobalStations(params.limit || 4000);
+      return fetchGlobalStations(params.limit || 2000);
     }
 
     const stations = await radioApi.searchStations({
       ...params,
       hasGeoInfo: params.hasGeoInfo !== undefined ? params.hasGeoInfo : true,
-      limit: params.limit || 4000,
+      limit: params.limit || 2000,
     });
 
     return stations
