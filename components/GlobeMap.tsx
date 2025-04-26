@@ -292,13 +292,6 @@ const Earth = ({ stations }: { stations: Station[] }) => {
     // Use all stations from each continent
     const allStations: Station[] = Object.values(continentGroups).flat();
 
-    console.log(
-      "Station distribution by continent:",
-      Object.entries(continentGroups).map(
-        ([continent, stations]) => `${continent}: ${stations.length}`
-      )
-    );
-
     return allStations;
   }, [stations]);
 
@@ -499,15 +492,11 @@ const GlobeMap: React.FC<GlobeMapProps> = ({ stations }) => {
       isRecovering = true;
       retryCount++;
 
-      console.log(
-        `WebGL context lost - attempt ${retryCount} of ${MAX_RETRIES}`
-      );
       setHasError(true);
 
       if (retryCount <= MAX_RETRIES) {
         clearTimeout(recoveryTimeout);
         recoveryTimeout = setTimeout(() => {
-          console.log("Attempting to restore WebGL context");
           setKey((prev) => prev + 1);
           setHasError(false);
           isRecovering = false;
@@ -518,7 +507,6 @@ const GlobeMap: React.FC<GlobeMapProps> = ({ stations }) => {
     };
 
     const handleContextRestored = () => {
-      console.log("WebGL context restored");
       setHasError(false);
       isRecovering = false;
       retryCount = 0;

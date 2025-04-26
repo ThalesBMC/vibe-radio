@@ -245,15 +245,13 @@ export const fetchGlobalStations = async (limit = 1000) => {
 
 export const fetchStations = async (params: StationQueryParams = {}) => {
   try {
-    console.log("Fetching stations with params:", params);
     const radioApi = await getApi();
 
     // If we specifically want global distribution, use our custom function
     if (params.hasGeoInfo) {
-      return fetchGlobalStations(params.limit || 1000);
+      return fetchGlobalStations(params.limit || 4000);
     }
 
-    // Default to stations with geo info, limit to 500 stations
     const stations = await radioApi.searchStations({
       ...params,
       hasGeoInfo: params.hasGeoInfo !== undefined ? params.hasGeoInfo : true,
