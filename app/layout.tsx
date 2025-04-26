@@ -91,7 +91,6 @@ export default function RootLayout({
           crossOrigin=""
         />
         {/* Favicon */}
-        <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
         <link
           rel="icon"
@@ -99,11 +98,7 @@ export default function RootLayout({
           sizes="96x96"
           type="image/png"
         />
-        <link
-          rel="apple-touch-icon"
-          href="/favicon/apple-icon.png"
-          sizes="180x180"
-        />
+
         <link rel="manifest" href="/favicon/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
