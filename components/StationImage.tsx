@@ -41,7 +41,7 @@ export const StationImage: React.FC<StationImageProps> = ({
         className="object-contain"
         onError={handleError}
         loading="lazy"
-        unoptimized // Para permitir URLs externas
+        unoptimized
       />
     </div>
   );

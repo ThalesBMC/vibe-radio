@@ -343,3 +343,23 @@ export const fetchTags = async (limit = 100) => {
     throw error;
   }
 };
+
+export const loadStationsFromLocalFile = async (limit = 1000) => {
+  try {
+    const stations = await import("@/data/data.json")
+      .then((module) => module.default || module)
+      .catch((error) => {
+        console.error("Failed to import local stations file:", error);
+        throw new Error("Local station data not available");
+      });
+
+    const validStations = stations
+      .filter((station) => station.geoLat && station.geoLong)
+      .map(sanitizeStation);
+
+    return validStations;
+  } catch (error) {
+    console.error("Failed to load stations from local file:", error);
+    throw error;
+  }
+};

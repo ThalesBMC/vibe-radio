@@ -45,7 +45,7 @@ const StationSidebar: React.FC<StationSidebarProps> = ({
 
   const handleStationClick = (station: Station) => {
     playStation(station);
-    // Collapse the sidebar after selecting a station on mobile
+
     if (window.innerWidth < 768) {
       setCollapsed(true);
     }
@@ -56,7 +56,7 @@ const StationSidebar: React.FC<StationSidebarProps> = ({
       setCollapsed(false);
       setTimeout(() => {
         searchInputRef.current?.focus();
-      }, 300); // After sidebar expands
+      }, 300);
     }
   };
 
