@@ -9,7 +9,6 @@ Global Radio is a web application that allows users to tune into radio stations 
 ## Technologies Used
 
 - **Next.js**: React framework for server-rendered applications
-- **React**: Frontend library for building user interfaces
 - **TypeScript**: Static type-checking for JavaScript
 - **Tailwind CSS**: Utility-first CSS framework for styling
 - **Three.js**: JavaScript 3D library
