@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useStations } from "@/hooks/useRadioApi";
 import { useRadioStore, ExtendedStation } from "@/store/radioStore";
 import PlayerControls from "@/components/PlayerControls";
+import Footer from "@/components/Footer";
 import "@/styles/mapStyles.css";
 
 // Dynamically import the globe component to prevent SSR issues with Three.js
@@ -35,11 +36,8 @@ export default function Home() {
   const { data: stations = [] } = useStations();
   const { setStations } = useRadioStore();
 
-  // Update the store with stations when loaded
   useEffect(() => {
     if (stations.length > 0) {
-      // The stations from loadStationsFromLocalFile are already properly mapped
-      // to the ExtendedStation format by the radioService.ts transformations
       setStations(stations as unknown as ExtendedStation[]);
     }
   }, [stations, setStations]);
@@ -55,6 +53,9 @@ export default function Home() {
       <div className="fixed top-[15px] left-[15px] right-0 z-10 p-4">
         <PlayerControls />
       </div>
+
+      {/* Footer with GitHub and author attribution */}
+      <Footer />
     </div>
   );
 }
