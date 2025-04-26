@@ -54,7 +54,10 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   icons: {
-    icon: "/favicon/favicon.ico",
+    icon: [
+      { url: "/favicon/favicon.ico", sizes: "any" },
+      { url: "/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
     apple: "/favicon/apple-icon.png",
     shortcut: "/favicon/favicon.ico",
     other: [
@@ -62,8 +65,15 @@ export const metadata: Metadata = {
         rel: "apple-touch-icon",
         url: "/favicon/apple-icon.png",
       },
+      {
+        rel: "mask-icon",
+        url: "/favicon/favicon.svg",
+        color: "#ffffff",
+      },
     ],
   },
+  manifest: "/favicon/manifest.json",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -83,8 +93,17 @@ export default function RootLayout({
         />
         {/* Favicon */}
         <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+        <link
+          rel="icon"
+          href="/favicon/favicon-96x96.png"
+          sizes="96x96"
+          type="image/png"
+        />
         <link rel="apple-touch-icon" href="/favicon/apple-icon.png" />
         <link rel="manifest" href="/favicon/manifest.json" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body className={inter.className}>
         <QueryProvider>{children}</QueryProvider>
