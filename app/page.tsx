@@ -50,7 +50,7 @@ export default function Home() {
       </div>
 
       {/* Player controls at the bottom */}
-      <div className="fixed top-[15px] left-[15px] right-0 z-10 p-4">
+      <div className="fixed top-[0px] md:top-[25px] left-[0px] right-0 z-10 p-4">
         <PlayerControls />
       </div>
 

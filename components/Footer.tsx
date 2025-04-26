@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="fixed bottom-[30px] left-[15px] z-50 text-white text-sm">
+    <div className="fixed bottom-[10px] md:bottom-[20px] left-[15px] z-50 text-white text-sm">
       <div className="flex flex-col gap-2 backdrop-blur-md bg-black/50 p-4 rounded-xl shadow-lg shadow-black/30">
         <Link
           href="https://github.com/ThalesBMC/vibe-radio"

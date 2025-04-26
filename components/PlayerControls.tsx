@@ -54,9 +54,9 @@ const PlayerControls = () => {
   const stationCountry = selectedStation?.country || "";
 
   return (
-    <div className="transition-all duration-300 max-w-md mx-auto w-full px-6 ml-4 pb-6">
+    <div className="transition-all duration-300 max-w-sm sm:max-w-md lg:max-w-lg  w-full px-2  ">
       {expanded ? (
-        <div className=" backdrop-blur-md text-white rounded-xl overflow-hidden shadow-xl">
+        <div className=" backdrop-blur-md text-white rounded-xl  shadow-xl">
           <div className="flex items-center justify-between p-5">
             <div className="grid grid-cols-[80px_1fr] gap-x-4 items-center min-w-0 flex-1">
               {stationFavicon ? (
@@ -165,7 +165,7 @@ const PlayerControls = () => {
       ) : (
         <button
           onClick={() => setExpanded(true)}
-          className="flex items-center space-x-3 bg-gradient-to-r from-indigo-900/90 to-blue-900/90 backdrop-blur-md text-white rounded-full py-3 px-5 shadow-xl mx-auto hover:shadow-2xl hover:scale-105 transition-all duration-200 border border-indigo-700/50"
+          className="flex items-center space-x-3 bg-gradient-to-r from-indigo-900/90 to-blue-900/90 backdrop-blur-md text-white rounded-full py-3 px-5 shadow-xl mx-6 mt-4 hover:shadow-2xl hover:scale-105 transition-all duration-200 border border-indigo-700/50"
         >
           <div className="flex items-center">
             {isPlaying ? (
