@@ -9,7 +9,7 @@ interface StationImageProps {
   className?: string;
 }
 
-const defaultImage = "/radio-default.svg"; // Coloque uma imagem default no diretório public
+const defaultImage = "/radio-default.svg";
 
 export const StationImage: React.FC<StationImageProps> = ({
   src,

@@ -355,33 +355,61 @@ export const loadStationsFromLocalFile = async (limit = 4000) => {
 
     const stations = Array.isArray(stationsModule) ? stationsModule : [];
 
-    // Use the actual data structure from the JSON file
     const validStations = stations
       .filter((station) => {
-        // Make sure this is a valid station with basic required properties
         return (
           station && typeof station === "object" && station.name && station.url
         );
       })
       .map((station) => {
-        // Transform stations if needed to match expected format
-        // Ensure URLs are HTTPS
-        const sanitizedStation = {
-          ...station,
+        const mappedStation = {
+          // Generate an ID if needed
+          id:
+            station.stationuuid ||
+            `station-${Math.random().toString(36).slice(2, 11)}`,
+
+          name: station.name,
           url: ensureHttps(station.url),
-          url_resolved: station.url_resolved
+          urlResolved: station.url_resolved
             ? ensureHttps(station.url_resolved)
             : ensureHttps(station.url),
           homepage: station.homepage ? ensureHttps(station.homepage) : "",
           favicon: station.favicon ? ensureHttps(station.favicon) : "",
+          tags: station.tags || [],
+          country: station.country || "",
+          countryCode: station.countrycode || "",
+          state: station.state || "",
+          language: station.language || "",
+          votes: station.votes || 0,
+          codec: station.codec || "",
+          bitrate: station.bitrate || 0,
+          lastCheckOk: station.lastcheckok ? true : false,
+          lastCheckTime: station.lastchecktime || "",
+          lastChangeTime: station.lastchangetime || "",
+          clickCount: station.clickcount || 0,
+          clickTrend: station.clicktrend || 0,
+
+          // Extended properties from local JSON - use only properties that exist in the JSON
+          geo_lat:
+            typeof station.geo_lat !== "undefined" ? station.geo_lat : null,
+          geo_long:
+            typeof station.geo_long !== "undefined" ? station.geo_long : null,
+          stationuuid: station.stationuuid,
+
+          // Add other properties needed from the original format
+          url_resolved: station.url_resolved,
+          countrycode: station.countrycode,
+          lastcheckok: station.lastcheckok,
+          lastchecktime: station.lastchecktime,
+          lastchangetime: station.lastchangetime,
+          clickcount: station.clickcount,
+          clicktrend: station.clicktrend,
         };
-        return sanitizedStation;
+
+        return mappedStation;
       })
       .slice(0, limit);
-
-    console.log(
-      `Found ${validStations.length} valid stations out of ${stations.length} total`
-    );
+    console.log(`Found ${validStations.length} valid stations`);
     return validStations;
   } catch (error) {
     console.error("Failed to load stations from local file:", error);

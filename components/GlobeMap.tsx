@@ -272,9 +272,14 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
     const stationsWithCoords = stations.filter(
       (station) =>
         station &&
-        ((station.geo_lat !== undefined && station.geo_long !== undefined) || // Check local JSON format
+        // Check for geo_lat/geo_long (local JSON format)
+        ((typeof station.geo_lat === "number" &&
+          !isNaN(station.geo_lat) &&
+          typeof station.geo_long === "number" &&
+          !isNaN(station.geo_long)) ||
+          // Check for geoLat/geoLong (API format)
           (station.geoLat &&
-            station.geoLong && // Check API format
+            station.geoLong &&
             !isNaN(parseFloat(String(station.geoLat))) &&
             !isNaN(parseFloat(String(station.geoLong)))))
     );
@@ -292,18 +297,32 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
 
     // Sort stations into continent groups
     stationsWithCoords.forEach((station) => {
-      // Check which property format the station has
-      const lat =
-        station.geo_lat !== undefined
-          ? station.geo_lat
-          : parseFloat(String(station.geoLat));
-      const lng =
-        station.geo_long !== undefined
-          ? station.geo_long
-          : parseFloat(String(station.geoLong));
+      try {
+        // Get coordinates depending on which format the station uses
+        const lat =
+          typeof station.geo_lat === "number"
+            ? station.geo_lat
+            : station.geoLat
+            ? parseFloat(String(station.geoLat))
+            : 0;
+        const lng =
+          typeof station.geo_long === "number"
+            ? station.geo_long
+            : station.geoLong
+            ? parseFloat(String(station.geoLong))
+            : 0;
 
-      const continent = getContinentFromCoords(lat, lng);
-      continentGroups[continent].push(station);
+        if (lat === 0 && lng === 0) {
+          // Skip stations with 0,0 coordinates (likely invalid)
+          return;
+        }
+
+        const continent = getContinentFromCoords(lat, lng);
+        continentGroups[continent].push(station);
+      } catch (error) {
+        // Skip stations with invalid coordinates
+        console.error("Error processing station:", error);
+      }
     });
 
     // Use all stations from each continent
@@ -399,14 +418,21 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
       {/* Station markers - INSIDE the globe group to rotate with it */}
       {validStations.map((station) => {
         try {
+          // Get coordinates safely based on available properties
           const lat =
-            station.geo_lat !== undefined
+            typeof station.geo_lat === "number"
               ? station.geo_lat
-              : parseFloat(String(station.geoLat));
+              : parseFloat(String(station.geoLat || 0));
           const lng =
-            station.geo_long !== undefined
+            typeof station.geo_long === "number"
               ? station.geo_long
-              : parseFloat(String(station.geoLong));
+              : parseFloat(String(station.geoLong || 0));
+
+          // Skip stations with 0,0 coordinates
+          if (lat === 0 && lng === 0) {
+            return null;
+          }
+
           const position = latLngToPosition(lat, lng);
 
           // Generate a unique ID if the station doesn't have one

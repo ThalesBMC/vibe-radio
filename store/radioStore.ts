@@ -3,10 +3,22 @@ import { Station } from "radio-browser-api";
 
 // Extended station type to support both API and local JSON formats
 export interface ExtendedStation extends Omit<Station, "tags"> {
+  // Properties from local JSON format
   geo_lat?: number;
   geo_long?: number;
   stationuuid?: string;
   tags?: string | string[];
+  url_resolved?: string;
+  countrycode?: string;
+  lastcheckok?: number;
+  lastchecktime?: string;
+  lastchangetime?: string;
+  clickcount?: number;
+  clicktrend?: number;
+  serveruuid?: string | null;
+  iso_3166_2?: string;
+  languagecodes?: string;
+  has_extended_info?: boolean;
 }
 
 interface RadioState {

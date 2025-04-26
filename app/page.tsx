@@ -31,13 +31,16 @@ const GlobeMap = dynamic(() => import("@/components/GlobeMap"), {
 });
 
 export default function Home() {
+  // Get stations from API hook
   const { data: stations = [] } = useStations();
   const { setStations } = useRadioStore();
 
   // Update the store with stations when loaded
   useEffect(() => {
     if (stations.length > 0) {
-      setStations(stations as ExtendedStation[]);
+      // The stations from loadStationsFromLocalFile are already properly mapped
+      // to the ExtendedStation format by the radioService.ts transformations
+      setStations(stations as unknown as ExtendedStation[]);
     }
   }, [stations, setStations]);
 
@@ -45,7 +48,7 @@ export default function Home() {
     <div className="h-screen w-screen overflow-hidden relative">
       {/* Full screen background for the globe */}
       <div className="fixed inset-0 z-0">
-        <GlobeMap stations={stations as ExtendedStation[]} />
+        <GlobeMap stations={stations as unknown as ExtendedStation[]} />
       </div>
 
       {/* Player controls at the bottom */}
