@@ -1,0 +1,175 @@
+html,
+body,
+#__next,
+main {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.station-marker-container {
+  background: none !important;
+  border: none !important;
+}
+
+.station-marker {
+  width: 12px;
+  height: 12px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  opacity: 0.7;
+  box-shadow: 0 0 0 2px #fff;
+  transition: all 0.2s ease;
+}
+
+.station-marker:hover {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+.station-marker.has-name {
+  background-color: #f97316;
+}
+
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: #fff !important;
+  color: #333 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  min-width: 200px;
+}
+
+.station-popup {
+  padding: 2px;
+}
+
+/* Fix for tile loading issues */
+.leaflet-tile {
+  visibility: inherit !important;
+}
+
+/* Make sure all map elements are visible */
+.leaflet-pane {
+  z-index: 400 !important;
+}
+
+.leaflet-overlay-pane {
+  z-index: 500 !important;
+}
+
+.leaflet-marker-pane {
+  z-index: 600 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 700 !important;
+}
+
+.leaflet-control {
+  z-index: 800 !important;
+}
+
+/* 3D Globe Styles */
+.station-tooltip {
+  pointer-events: none;
+  animation: fadeIn 0.3s ease;
+  user-select: none;
+  z-index: 10000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -90%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+
+/* Canvas container styles */
+canvas {
+  touch-action: none;
+  display: block !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* Player styles */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Ensure the globe fills the container */
+.globe-container {
+  position: fixed !important;
+  inset: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden;
+}
+
+/* Force hardware acceleration */
+.globe-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  z-index: -1;
+}
+
+/* Custom scrollbar for the station list */
+.stations-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stations-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.stations-list::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 10px;
+}
+
+.stations-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
