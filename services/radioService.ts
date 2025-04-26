@@ -344,7 +344,7 @@ export const fetchTags = async (limit = 100) => {
   }
 };
 
-export const loadStationsFromLocalFile = async (limit = 5000) => {
+export const loadStationsFromLocalFile = async (limit = 4000) => {
   try {
     const stationsModule = await import("@/data/radio_stations.json")
       .then((module) => module.default || module)

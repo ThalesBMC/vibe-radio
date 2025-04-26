@@ -13,7 +13,7 @@ import {
 export const useStations = (params: StationQueryParams = {}) => {
   return useQuery({
     queryKey: ["localStations", params],
-    queryFn: () => loadStationsFromLocalFile(params.limit || 5000),
+    queryFn: () => loadStationsFromLocalFile(params.limit || 4000),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
