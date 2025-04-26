@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useStations } from "@/hooks/useRadioApi";
 import { useRadioStore } from "@/store/radioStore";
