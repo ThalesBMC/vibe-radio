@@ -344,19 +344,44 @@ export const fetchTags = async (limit = 100) => {
   }
 };
 
-export const loadStationsFromLocalFile = async (limit = 1000) => {
+export const loadStationsFromLocalFile = async (limit = 5000) => {
   try {
-    const stations = await import("@/data/radio_stations.json")
+    const stationsModule = await import("@/data/radio_stations.json")
       .then((module) => module.default || module)
       .catch((error) => {
         console.error("Failed to import local stations file:", error);
         throw new Error("Local station data not available");
       });
 
-    const validStations = stations
-      .filter((station) => station.geoLat && station.geoLong)
-      .map(sanitizeStation);
+    const stations = Array.isArray(stationsModule) ? stationsModule : [];
 
+    // Use the actual data structure from the JSON file
+    const validStations = stations
+      .filter((station) => {
+        // Make sure this is a valid station with basic required properties
+        return (
+          station && typeof station === "object" && station.name && station.url
+        );
+      })
+      .map((station) => {
+        // Transform stations if needed to match expected format
+        // Ensure URLs are HTTPS
+        const sanitizedStation = {
+          ...station,
+          url: ensureHttps(station.url),
+          url_resolved: station.url_resolved
+            ? ensureHttps(station.url_resolved)
+            : ensureHttps(station.url),
+          homepage: station.homepage ? ensureHttps(station.homepage) : "",
+          favicon: station.favicon ? ensureHttps(station.favicon) : "",
+        };
+        return sanitizedStation;
+      })
+      .slice(0, limit);
+
+    console.log(
+      `Found ${validStations.length} valid stations out of ${stations.length} total`
+    );
     return validStations;
   } catch (error) {
     console.error("Failed to load stations from local file:", error);

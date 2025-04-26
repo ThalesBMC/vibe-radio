@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useStations } from "@/hooks/useRadioApi";
-import { useRadioStore } from "@/store/radioStore";
+import { useRadioStore, ExtendedStation } from "@/store/radioStore";
 import PlayerControls from "@/components/PlayerControls";
 import "@/styles/mapStyles.css";
 
@@ -37,8 +37,7 @@ export default function Home() {
   // Update the store with stations when loaded
   useEffect(() => {
     if (stations.length > 0) {
-      // Use all stations instead of limiting to 50
-      setStations(stations);
+      setStations(stations as ExtendedStation[]);
     }
   }, [stations, setStations]);
 
@@ -46,7 +45,7 @@ export default function Home() {
     <div className="h-screen w-screen overflow-hidden relative">
       {/* Full screen background for the globe */}
       <div className="fixed inset-0 z-0">
-        <GlobeMap stations={stations} />
+        <GlobeMap stations={stations as ExtendedStation[]} />
       </div>
 
       {/* Player controls at the bottom */}

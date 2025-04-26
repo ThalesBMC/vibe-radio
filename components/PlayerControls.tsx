@@ -83,8 +83,15 @@ const PlayerControls = () => {
                 </h3>
                 <p className="text-xs text-gray-200 truncate opacity-80 mt-1">
                   {selectedStation.country}
-                  {selectedStation.tags && selectedStation.tags.length > 0
-                    ? ` • ${selectedStation.tags.slice(0, 2).join(", ")}`
+                  {selectedStation.tags
+                    ? typeof selectedStation.tags === "string"
+                      ? selectedStation.tags
+                        ? ` • ${selectedStation.tags}`
+                        : ""
+                      : Array.isArray(selectedStation.tags) &&
+                        selectedStation.tags.length > 0
+                      ? ` • ${selectedStation.tags.slice(0, 2).join(", ")}`
+                      : ""
                     : ""}
                 </p>
               </div>

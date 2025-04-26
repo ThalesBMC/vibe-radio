@@ -1,28 +1,36 @@
 import { create } from "zustand";
 import { Station } from "radio-browser-api";
 
+// Extended station type to support both API and local JSON formats
+export interface ExtendedStation extends Omit<Station, "tags"> {
+  geo_lat?: number;
+  geo_long?: number;
+  stationuuid?: string;
+  tags?: string | string[];
+}
+
 interface RadioState {
-  selectedStation: Station | null;
+  selectedStation: ExtendedStation | null;
   audioElement: HTMLAudioElement | null;
   isPlaying: boolean;
   volume: number;
   errorMessage: string | null;
-  stations: Station[];
+  stations: ExtendedStation[];
   stationsLoading: boolean;
   currentPosition: [number, number] | null;
 
   // Actions
-  setSelectedStation: (station: Station | null) => void;
+  setSelectedStation: (station: ExtendedStation | null) => void;
   setAudioElement: (element: HTMLAudioElement | null) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setVolume: (volume: number) => void;
   setErrorMessage: (message: string | null) => void;
-  setStations: (stations: Station[]) => void;
+  setStations: (stations: ExtendedStation[]) => void;
   setStationsLoading: (loading: boolean) => void;
   setCurrentPosition: (position: [number, number] | null) => void;
 
   // Playback controls
-  playStation: (station: Station) => void;
+  playStation: (station: ExtendedStation) => void;
   stopPlayback: () => void;
   togglePlayback: () => void;
 }
@@ -78,7 +86,10 @@ export const useRadioStore = create<RadioState>((set, get) => ({
 
     // Stop current audio
     audioElement.pause();
-    audioElement.src = station.urlResolved;
+
+    // Handle both API and local JSON formats for URL
+    const stationUrl = station.urlResolved || station.url;
+    audioElement.src = stationUrl;
     audioElement.load();
 
     // Try to play new station

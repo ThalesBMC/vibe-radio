@@ -7,12 +7,14 @@ import {
   fetchCountries,
   fetchTags,
   StationQueryParams,
+  loadStationsFromLocalFile,
 } from "@/services/radioService";
 
 export const useStations = (params: StationQueryParams = {}) => {
   return useQuery({
-    queryKey: ["stations", params],
-    queryFn: () => fetchStations({ ...params, hasGeoInfo: true }),
+    queryKey: ["localStations", params],
+    queryFn: () => loadStationsFromLocalFile(params.limit || 5000),
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 

@@ -7,6 +7,14 @@ import * as THREE from "three";
 import { Station } from "radio-browser-api";
 import { useRadioStore } from "@/store/radioStore";
 
+// Extended station type to support both API and local JSON formats
+interface ExtendedStation extends Omit<Station, "tags"> {
+  geo_lat?: number;
+  geo_long?: number;
+  stationuuid?: string;
+  tags?: string | string[];
+}
+
 // Nebula component for a cosmic cloud effect
 const Nebula = () => {
   const nebulaMaterialRef = useRef<THREE.ShaderMaterial>(null);
@@ -251,7 +259,7 @@ const getContinentFromCoords = (lat: number, lng: number): string => {
 };
 
 // Earth component with continuous rotation and stations
-const Earth = ({ stations }: { stations: Station[] }) => {
+const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
   const earthRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   const globeGroupRef = useRef<THREE.Group>(null);
@@ -264,14 +272,15 @@ const Earth = ({ stations }: { stations: Station[] }) => {
     const stationsWithCoords = stations.filter(
       (station) =>
         station &&
-        station.geoLat &&
-        station.geoLong &&
-        !isNaN(parseFloat(String(station.geoLat))) &&
-        !isNaN(parseFloat(String(station.geoLong)))
+        ((station.geo_lat !== undefined && station.geo_long !== undefined) || // Check local JSON format
+          (station.geoLat &&
+            station.geoLong && // Check API format
+            !isNaN(parseFloat(String(station.geoLat))) &&
+            !isNaN(parseFloat(String(station.geoLong)))))
     );
 
     // Group stations by continent
-    const continentGroups: { [key: string]: Station[] } = {
+    const continentGroups: { [key: string]: ExtendedStation[] } = {
       north_america: [],
       south_america: [],
       europe: [],
@@ -283,14 +292,23 @@ const Earth = ({ stations }: { stations: Station[] }) => {
 
     // Sort stations into continent groups
     stationsWithCoords.forEach((station) => {
-      const lat = parseFloat(String(station.geoLat));
-      const lng = parseFloat(String(station.geoLong));
+      // Check which property format the station has
+      const lat =
+        station.geo_lat !== undefined
+          ? station.geo_lat
+          : parseFloat(String(station.geoLat));
+      const lng =
+        station.geo_long !== undefined
+          ? station.geo_long
+          : parseFloat(String(station.geoLong));
+
       const continent = getContinentFromCoords(lat, lng);
       continentGroups[continent].push(station);
     });
 
     // Use all stations from each continent
-    const allStations: Station[] = Object.values(continentGroups).flat();
+    const allStations: ExtendedStation[] =
+      Object.values(continentGroups).flat();
 
     return allStations;
   }, [stations]);
@@ -381,18 +399,36 @@ const Earth = ({ stations }: { stations: Station[] }) => {
       {/* Station markers - INSIDE the globe group to rotate with it */}
       {validStations.map((station) => {
         try {
-          const lat = parseFloat(String(station.geoLat));
-          const lng = parseFloat(String(station.geoLong));
+          const lat =
+            station.geo_lat !== undefined
+              ? station.geo_lat
+              : parseFloat(String(station.geoLat));
+          const lng =
+            station.geo_long !== undefined
+              ? station.geo_long
+              : parseFloat(String(station.geoLong));
           const position = latLngToPosition(lat, lng);
-          const isActive = selectedStation?.id === station.id;
+
+          // Generate a unique ID if the station doesn't have one
+          const stationId =
+            station.id || station.stationuuid || `station-${lat}-${lng}`;
+
+          const isActive =
+            selectedStation?.id === stationId ||
+            selectedStation?.stationuuid === station.stationuuid;
 
           return (
             <StationMarker
-              key={station.id}
+              key={stationId}
               position={position}
               isActive={isActive}
               onClick={() => {
-                playStation(station);
+                // Ensure station has an id property before passing to playStation
+                const stationWithId = {
+                  ...station,
+                  id: stationId,
+                };
+                playStation(stationWithId);
                 setCurrentPosition([lat, lng]);
               }}
             />
@@ -424,7 +460,7 @@ const latLngToPosition = (
 };
 
 // Main Scene with memory and performance optimizations
-const Scene = ({ stations }: { stations: Station[] }) => {
+const Scene = ({ stations }: { stations: ExtendedStation[] }) => {
   return (
     <>
       {/* Enhanced background */}
@@ -458,7 +494,7 @@ const Scene = ({ stations }: { stations: Station[] }) => {
 
 // Main GlobeMap component with context recovery
 interface GlobeMapProps {
-  stations: Station[];
+  stations: ExtendedStation[];
 }
 
 const GlobeMap: React.FC<GlobeMapProps> = ({ stations }) => {
