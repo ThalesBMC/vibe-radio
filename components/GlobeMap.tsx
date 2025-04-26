@@ -151,7 +151,6 @@ const EnhancedStarField = () => {
         fade
         speed={0.5}
       />
-      <Nebula />
 
       {/* Second layer of stars with different parameters */}
       <Stars
