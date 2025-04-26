@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 interface StationImageProps {
@@ -21,6 +21,11 @@ export const StationImage: React.FC<StationImageProps> = ({
   const [imgSrc, setImgSrc] = useState(src || defaultImage);
   const [isError, setIsError] = useState(false);
 
+  useEffect(() => {
+    setImgSrc(src || defaultImage);
+    setIsError(false);
+  }, [src]);
+
   const handleError = () => {
     if (!isError) {
       setIsError(true);
@@ -42,6 +47,7 @@ export const StationImage: React.FC<StationImageProps> = ({
         onError={handleError}
         loading="lazy"
         unoptimized
+        key={src}
       />
     </div>
   );

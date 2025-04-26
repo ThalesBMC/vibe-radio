@@ -48,20 +48,28 @@ const PlayerControls = () => {
     return null;
   }
 
+  // Make sure we have the station favicon
+  const stationFavicon = selectedStation?.favicon || "";
+  const stationName = selectedStation?.name || "Unknown Station";
+  const stationCountry = selectedStation?.country || "";
+
   return (
     <div className="transition-all duration-300 max-w-md mx-auto w-full px-6 ml-4 pb-6">
       {expanded ? (
         <div className=" backdrop-blur-md text-white rounded-xl overflow-hidden shadow-xl">
           <div className="flex items-center justify-between p-5">
             <div className="grid grid-cols-[80px_1fr] gap-x-4 items-center min-w-0 flex-1">
-              {selectedStation.favicon ? (
+              {stationFavicon ? (
                 <div className="relative w-12 h-12 flex items-center justify-center">
                   <StationImage
-                    src={selectedStation.favicon}
-                    alt={selectedStation.name}
+                    src={stationFavicon}
+                    alt={stationName}
                     width={48}
                     height={48}
                     className="rounded-lg w-full h-full object-cover"
+                    key={`player-${
+                      selectedStation.id || selectedStation.stationuuid
+                    }`}
                   />
                 </div>
               ) : (
@@ -77,11 +85,9 @@ const PlayerControls = () => {
                 </div>
               )}
               <div className="min-w-0">
-                <h3 className="font-bold text-base truncate">
-                  {selectedStation.name}
-                </h3>
+                <h3 className="font-bold text-base truncate">{stationName}</h3>
                 <p className="text-xs text-gray-200 truncate opacity-80 mt-1">
-                  {selectedStation.country}
+                  {stationCountry}
                   {selectedStation.tags
                     ? typeof selectedStation.tags === "string"
                       ? selectedStation.tags
@@ -171,7 +177,7 @@ const PlayerControls = () => {
                   <PauseIcon className="h-3.5 w-3.5 text-blue-700" />
                 </div>
                 <span className="text-sm font-medium truncate max-w-[150px]">
-                  {selectedStation.name}
+                  {stationName}
                 </span>
               </div>
             ) : (
@@ -183,7 +189,7 @@ const PlayerControls = () => {
                   <PlayIcon className="h-3.5 w-3.5 text-white" />
                 </div>
                 <span className="text-sm font-medium truncate max-w-[150px]">
-                  {selectedStation.name}
+                  {stationName}
                 </span>
               </div>
             )}
