@@ -15,16 +15,6 @@ const Footer = () => {
             Open Source on GitHub ⭐
           </span>
         </Link>
-        <Link
-          href="https://www.linkedin.com/in/thalesbmc/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center hover:text-blue-400 transition-all group"
-        >
-          <span className="group-hover:underline">
-            Made by Thales Brederodes
-          </span>
-        </Link>
       </div>
     </div>
   );
