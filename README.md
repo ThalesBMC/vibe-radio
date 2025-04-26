@@ -1,6 +1,6 @@
 # Global Radio
 
-<img src="https://raw.githubusercontent.com/ThalesBMC/token-dashboard/main/public/og.png" width="1439" alt="Token Dashboard" />
+<img src="https://raw.githubusercontent.com/ThalesBMC/vibe-radio/main/public/og.png" width="1439" alt="Token Dashboard" />
 
 ## About the Project
 
