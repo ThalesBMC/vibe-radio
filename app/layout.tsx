@@ -4,6 +4,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
 import "@/styles/mapStyles.css";
 import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -87,6 +88,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <QueryProvider>{children}</QueryProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -202,7 +202,7 @@ const StationMarker = ({
   onClick: () => void;
 }) => {
   const color = isActive ? "#f97316" : "#3b82f6";
-  const scale = isActive ? 1.3 : 0.8;
+  const scale = isActive ? 1.3 : 1;
 
   return (
     <mesh
