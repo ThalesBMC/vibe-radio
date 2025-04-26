@@ -195,6 +195,7 @@ const StationSidebar: React.FC<StationSidebarProps> = ({
                               height={40}
                               className="rounded-lg"
                               key={`sidebar-${
+                                /* eslint-disable  @typescript-eslint/no-explicit-any */
                                 station.id || (station as any).stationuuid
                               }`}
                             />

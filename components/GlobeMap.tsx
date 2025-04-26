@@ -122,9 +122,10 @@ const EnhancedStarField = () => {
 
   // Slowly rotate the entire starfield
   useFrame(() => {
-    if (starsRef.current) {
-      starsRef.current.rotation.y += 0.0001;
-    }
+    // if (starsRef.current) {
+    //   starsRef.current.rotation.y += 0.0001;
+    // }
+    // Star rotation removed
   });
 
   useEffect(() => {
@@ -340,15 +341,14 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
 
   // Use useFrame for guaranteed continuous animation
   useFrame(() => {
-    if (globeGroupRef.current) {
-      // Rotate the entire group (earth, clouds, and markers together)
-      globeGroupRef.current.rotation.y += 0.0005;
-
-      // Individual cloud rotation (slightly faster than earth)
-      if (cloudsRef.current) {
-        cloudsRef.current.rotation.y += 0.0001;
-      }
-    }
+    // if (globeGroupRef.current) {
+    //   // Rotate the entire group (earth, clouds, and markers together)
+    //   globeGroupRef.current.rotation.y += 0.0005;
+    //   // Individual cloud rotation (slightly faster than earth)
+    //   if (cloudsRef.current) {
+    //     cloudsRef.current.rotation.y += 0.0001;
+    //   }
+    // All rotation animations removed
   });
 
   // Cleanup resources on unmount
