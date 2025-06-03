@@ -19,12 +19,15 @@ const PlayerControls = () => {
     togglePlayback,
     setVolume,
     errorMessage,
+    audioElement,
   } = useRadioStore();
   const [expanded, setExpanded] = useState(true);
   const [showVolumeControls, setShowVolumeControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [localVolume, setLocalVolume] = useState(volume);
   const volumeControlsRef = useRef<HTMLDivElement>(null);
   const volumeButtonRef = useRef<HTMLButtonElement>(null);
+  const isDraggingRef = useRef(false);
 
   // Close volume control when clicking outside
   useEffect(() => {
@@ -44,6 +47,33 @@ const PlayerControls = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Sync local volume with global volume
+  useEffect(() => {
+    if (!isDraggingRef.current) {
+      setLocalVolume(volume);
+    }
+  }, [volume]);
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setLocalVolume(newVolume);
+
+    // Directly update audio element volume for immediate feedback
+    if (audioElement) {
+      audioElement.volume = newVolume;
+    }
+  };
+
+  const handleVolumeDragStart = () => {
+    isDraggingRef.current = true;
+  };
+
+  const handleVolumeDragEnd = () => {
+    isDraggingRef.current = false;
+    // Update store only when drag ends
+    setVolume(localVolume);
+  };
 
   // Auto-expand when a station is selected
   useEffect(() => {
@@ -187,7 +217,7 @@ const PlayerControls = () => {
                   className="p-2 text-gray-200 hover:text-white transition-colors rounded-full hover:bg-indigo-800/50"
                   aria-label="Volume"
                 >
-                  {volume === 0 ? (
+                  {localVolume === 0 ? (
                     <SpeakerXMarkIcon className="h-5 w-5" />
                   ) : (
                     <SpeakerWaveIcon className="h-5 w-5" />
@@ -204,8 +234,12 @@ const PlayerControls = () => {
                       min="0"
                       max="1"
                       step="0.01"
-                      value={volume}
-                      onChange={(e) => setVolume(parseFloat(e.target.value))}
+                      value={localVolume}
+                      onChange={handleVolumeChange}
+                      onMouseDown={handleVolumeDragStart}
+                      onTouchStart={handleVolumeDragStart}
+                      onMouseUp={handleVolumeDragEnd}
+                      onTouchEnd={handleVolumeDragEnd}
                       className="w-24 accent-blue-500"
                     />
                   </div>
