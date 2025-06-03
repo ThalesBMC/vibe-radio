@@ -7,12 +7,19 @@ import {
   SpeakerXMarkIcon,
   XMarkIcon,
   ArrowUpIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/solid";
 import { StationImage } from "./StationImage";
 
 const PlayerControls = () => {
-  const { selectedStation, isPlaying, volume, togglePlayback, setVolume } =
-    useRadioStore();
+  const {
+    selectedStation,
+    isPlaying,
+    volume,
+    togglePlayback,
+    setVolume,
+    errorMessage,
+  } = useRadioStore();
   const [expanded, setExpanded] = useState(true);
   const [showVolumeControls, setShowVolumeControls] = useState(false);
   const volumeControlsRef = useRef<HTMLDivElement>(null);
@@ -67,7 +74,7 @@ const PlayerControls = () => {
       {expanded ? (
         <div className=" backdrop-blur-md text-white rounded-xl  shadow-xl">
           <div className="flex items-center justify-between p-5">
-            <div className="grid grid-cols-[80px_1fr] gap-x-4 items-center min-w-0 flex-1">
+            <div className="grid grid-cols-[80px_1fr] gap-x-2 items-center min-w-0 flex-1">
               {stationFavicon ? (
                 <div className="relative w-12 h-12 flex items-center justify-center">
                   <StationImage
@@ -80,34 +87,49 @@ const PlayerControls = () => {
                       selectedStation.id || selectedStation.stationuuid
                     }`}
                   />
+                  {errorMessage && (
+                    <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
+                      <ExclamationTriangleIcon className="h-6 w-6 text-yellow-400" />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-6 h-6 text-gray-400"
-                  >
-                    <path d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z" />
-                  </svg>
+                  {errorMessage ? (
+                    <ExclamationTriangleIcon className="w-6 h-6 text-yellow-400" />
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6 text-gray-400"
+                    >
+                      <path d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z" />
+                    </svg>
+                  )}
                 </div>
               )}
               <div className="min-w-0">
                 <h3 className="font-bold text-base truncate">{stationName}</h3>
-                <p className="text-xs text-gray-200 truncate opacity-80 mt-1">
-                  {stationCountry}
-                  {selectedStation.tags
-                    ? typeof selectedStation.tags === "string"
-                      ? selectedStation.tags
-                        ? ` • ${selectedStation.tags}`
+                {errorMessage ? (
+                  <p className="text-xs text-yellow-400 truncate mt-1">
+                    {errorMessage}
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-200 truncate opacity-80 mt-1">
+                    {stationCountry}
+                    {selectedStation.tags
+                      ? typeof selectedStation.tags === "string"
+                        ? selectedStation.tags
+                          ? ` • ${selectedStation.tags}`
+                          : ""
+                        : Array.isArray(selectedStation.tags) &&
+                          selectedStation.tags.length > 0
+                        ? ` • ${selectedStation.tags.slice(0, 2).join(", ")}`
                         : ""
-                      : Array.isArray(selectedStation.tags) &&
-                        selectedStation.tags.length > 0
-                      ? ` • ${selectedStation.tags.slice(0, 2).join(", ")}`
-                      : ""
-                    : ""}
-                </p>
+                      : ""}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -118,7 +140,9 @@ const PlayerControls = () => {
                   isPlaying
                     ? "bg-white text-blue-700"
                     : "bg-blue-500 text-white"
-                } hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center`}
+                } hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center ${
+                  errorMessage ? "opacity-80" : ""
+                }`}
                 aria-label={isPlaying ? "Pause" : "Play"}
                 style={{ width: "44px", height: "44px" }}
               >
@@ -180,11 +204,17 @@ const PlayerControls = () => {
             {isPlaying ? (
               <div className="flex items-center gap-3">
                 <div
-                  className="bg-white rounded-full p-1.5 flex items-center justify-center"
+                  className={`bg-white rounded-full p-1.5 flex items-center justify-center ${
+                    errorMessage ? "bg-opacity-80" : ""
+                  }`}
                   style={{ width: "26px", height: "26px" }}
                   onClick={handleCollapsedPlayClick}
                 >
-                  <PauseIcon className="h-3.5 w-3.5 text-blue-700" />
+                  {errorMessage ? (
+                    <ExclamationTriangleIcon className="h-3.5 w-3.5 text-yellow-500" />
+                  ) : (
+                    <PauseIcon className="h-3.5 w-3.5 text-blue-700" />
+                  )}
                 </div>
                 <span className="text-sm font-medium truncate max-w-[150px]">
                   {stationName}
@@ -193,11 +223,17 @@ const PlayerControls = () => {
             ) : (
               <div className="flex items-center gap-3">
                 <div
-                  className="bg-blue-500 rounded-full p-1.5 flex items-center justify-center"
+                  className={`bg-blue-500 rounded-full p-1.5 flex items-center justify-center ${
+                    errorMessage ? "bg-opacity-80" : ""
+                  }`}
                   style={{ width: "26px", height: "26px" }}
                   onClick={handleCollapsedPlayClick}
                 >
-                  <PlayIcon className="h-3.5 w-3.5 text-white" />
+                  {errorMessage ? (
+                    <ExclamationTriangleIcon className="h-3.5 w-3.5 text-yellow-300" />
+                  ) : (
+                    <PlayIcon className="h-3.5 w-3.5 text-white" />
+                  )}
                 </div>
                 <span className="text-sm font-medium truncate max-w-[150px]">
                   {stationName}

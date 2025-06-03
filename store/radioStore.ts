@@ -87,7 +87,7 @@ export const useRadioStore = create<RadioState>((set, get) => ({
         .catch((error) => {
           console.error("Error playing station:", error);
           set({
-            errorMessage: "Failed to play station. Please try another one.",
+            errorMessage: "Failed to play station",
           });
         });
       return;
@@ -111,7 +111,7 @@ export const useRadioStore = create<RadioState>((set, get) => ({
       .catch((error) => {
         console.error("Error playing station:", error);
         set({
-          errorMessage: "Failed to play station. Please try another one.",
+          errorMessage: "Failed to play station",
         });
       });
   },
@@ -139,7 +139,7 @@ export const useRadioStore = create<RadioState>((set, get) => ({
         .catch((error) => {
           console.error("Error playing station:", error);
           set({
-            errorMessage: "Failed to play station. Please try another one.",
+            errorMessage: "Failed to play station",
           });
         });
     }
