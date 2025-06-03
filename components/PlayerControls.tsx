@@ -13,7 +13,7 @@ import { StationImage } from "./StationImage";
 const PlayerControls = () => {
   const { selectedStation, isPlaying, volume, togglePlayback, setVolume } =
     useRadioStore();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [showVolumeControls, setShowVolumeControls] = useState(false);
   const volumeControlsRef = useRef<HTMLDivElement>(null);
   const volumeButtonRef = useRef<HTMLButtonElement>(null);
@@ -52,6 +52,15 @@ const PlayerControls = () => {
   const stationFavicon = selectedStation?.favicon || "";
   const stationName = selectedStation?.name || "Unknown Station";
   const stationCountry = selectedStation?.country || "";
+
+  const handleCollapsedPlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    togglePlayback();
+  };
+
+  const handleContainerClick = () => {
+    setExpanded(true);
+  };
 
   return (
     <div className="transition-all duration-300 max-w-sm sm:max-w-md lg:max-w-lg  w-full px-2  ">
@@ -164,7 +173,7 @@ const PlayerControls = () => {
         </div>
       ) : (
         <button
-          onClick={() => setExpanded(true)}
+          onClick={handleContainerClick}
           className="flex items-center space-x-3 bg-gradient-to-r from-indigo-900/90 to-blue-900/90 backdrop-blur-md text-white rounded-full py-3 px-5 shadow-xl mx-6 mt-4 hover:shadow-2xl hover:scale-105 transition-all duration-200 border border-indigo-700/50"
         >
           <div className="flex items-center">
@@ -173,6 +182,7 @@ const PlayerControls = () => {
                 <div
                   className="bg-white rounded-full p-1.5 flex items-center justify-center"
                   style={{ width: "26px", height: "26px" }}
+                  onClick={handleCollapsedPlayClick}
                 >
                   <PauseIcon className="h-3.5 w-3.5 text-blue-700" />
                 </div>
@@ -185,6 +195,7 @@ const PlayerControls = () => {
                 <div
                   className="bg-blue-500 rounded-full p-1.5 flex items-center justify-center"
                   style={{ width: "26px", height: "26px" }}
+                  onClick={handleCollapsedPlayClick}
                 >
                   <PlayIcon className="h-3.5 w-3.5 text-white" />
                 </div>
