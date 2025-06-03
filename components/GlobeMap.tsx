@@ -205,26 +205,51 @@ const StationMarker = ({
   position,
   isActive,
   onClick,
+  continent,
 }: {
   position: [number, number, number];
   isActive: boolean;
   onClick: () => void;
+  continent: string;
 }) => {
   const color = isActive ? "#f97316" : "#3b82f6";
-  const scale = isActive ? 1.3 : 1;
+
+  // Smaller scale for Europe due to higher station density
+  let activeScale = 1.3;
+  let inactiveScale = 1;
+
+  if (continent === "europe") {
+    activeScale = 0.7;
+    inactiveScale = 0.4;
+  }
+  if (continent === "north_america") {
+    activeScale = 0.9;
+    inactiveScale = 0.6;
+  }
+
+  const scale = isActive ? activeScale : inactiveScale;
 
   return (
-    <mesh
-      position={position}
-      scale={[scale, scale, scale]}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-    >
-      <sphereGeometry args={[0.01, 6, 6]} />
-      <meshBasicMaterial color={color} />
-    </mesh>
+    <group>
+      {/* Visible marker */}
+      <mesh
+        position={position}
+        scale={[scale, scale, scale]}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+      >
+        <sphereGeometry args={[0.01, 12, 12]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+
+      {/* Invisible larger hitbox for better touch interaction */}
+      <mesh position={position} visible={false}>
+        <sphereGeometry args={[0.03, 8, 8]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+    </group>
   );
 };
 
@@ -443,6 +468,8 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
             selectedStation?.id === stationId ||
             selectedStation?.stationuuid === station.stationuuid;
 
+          const continent = getContinentFromCoords(lat, lng);
+
           return (
             <StationMarker
               key={stationId}
@@ -457,6 +484,7 @@ const Earth = ({ stations }: { stations: ExtendedStation[] }) => {
                 playStation(stationWithId);
                 setCurrentPosition([lat, lng]);
               }}
+              continent={continent}
             />
           );
         } catch (error) {
