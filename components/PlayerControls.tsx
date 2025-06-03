@@ -22,6 +22,7 @@ const PlayerControls = () => {
   } = useRadioStore();
   const [expanded, setExpanded] = useState(true);
   const [showVolumeControls, setShowVolumeControls] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const volumeControlsRef = useRef<HTMLDivElement>(null);
   const volumeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -50,6 +51,19 @@ const PlayerControls = () => {
       setExpanded(true);
     }
   }, [selectedStation]);
+
+  // Handle loading state when toggling playback
+  useEffect(() => {
+    if (selectedStation && !isPlaying && !errorMessage) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 3000); // Maximum loading time of 3 seconds
+      return () => clearTimeout(timer);
+    } else {
+      setIsLoading(false);
+    }
+  }, [selectedStation, isPlaying, errorMessage]);
 
   if (!selectedStation) {
     return null;
@@ -92,11 +106,18 @@ const PlayerControls = () => {
                       <ExclamationTriangleIcon className="h-6 w-6 text-yellow-400" />
                     </div>
                   )}
+                  {isLoading && !errorMessage && (
+                    <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
+                      <div className="h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center">
                   {errorMessage ? (
                     <ExclamationTriangleIcon className="w-6 h-6 text-yellow-400" />
+                  ) : isLoading ? (
+                    <div className="h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -114,6 +135,10 @@ const PlayerControls = () => {
                 {errorMessage ? (
                   <p className="text-xs text-yellow-400 truncate mt-1">
                     {errorMessage}
+                  </p>
+                ) : isLoading ? (
+                  <p className="text-xs text-blue-400 truncate mt-1">
+                    Loading station...
                   </p>
                 ) : (
                   <p className="text-xs text-gray-200 truncate opacity-80 mt-1">
@@ -146,7 +171,9 @@ const PlayerControls = () => {
                 aria-label={isPlaying ? "Pause" : "Play"}
                 style={{ width: "44px", height: "44px" }}
               >
-                {isPlaying ? (
+                {isLoading && !isPlaying && !errorMessage ? (
+                  <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                ) : isPlaying ? (
                   <PauseIcon className="h-5 w-5" />
                 ) : (
                   <PlayIcon className="h-5 w-5 ml-0.5" />
@@ -212,6 +239,8 @@ const PlayerControls = () => {
                 >
                   {errorMessage ? (
                     <ExclamationTriangleIcon className="h-3.5 w-3.5 text-yellow-500" />
+                  ) : isLoading ? (
+                    <div className="h-3.5 w-3.5 border-2 border-blue-700 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <PauseIcon className="h-3.5 w-3.5 text-blue-700" />
                   )}
@@ -231,6 +260,8 @@ const PlayerControls = () => {
                 >
                   {errorMessage ? (
                     <ExclamationTriangleIcon className="h-3.5 w-3.5 text-yellow-300" />
+                  ) : isLoading ? (
+                    <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <PlayIcon className="h-3.5 w-3.5 text-white" />
                   )}
