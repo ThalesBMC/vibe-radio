@@ -210,7 +210,7 @@ const PlayerControls = () => {
                 )}
               </button>
 
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <button
                   ref={volumeButtonRef}
                   onClick={() => setShowVolumeControls(!showVolumeControls)}
